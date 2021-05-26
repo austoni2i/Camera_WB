@@ -1,0 +1,3 @@
+rootProject.name = "Camera WB"
+include ':app'
+include ':cameraview'
