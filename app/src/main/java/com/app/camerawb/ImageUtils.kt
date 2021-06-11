@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.graphics.*
 import android.media.Image
 import android.os.Environment
+import android.util.Log
 import com.app.camerawb.AppPrefs
 import com.otaliastudios.cameraview.size.Size
 import java.io.*
@@ -163,13 +164,20 @@ object ImageUtils {
         bytes?:return null
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 
-        val radius = 195f
-        val width = 800
-        val height = 450
-        val offset = Point(AppPrefs.cameraXadjustment, AppPrefs.cameraYadjustment)
+        val radius = 173f
+        var width = size.width/4
+        var height = size.height/4
+        var magicX = AppPrefs.cameraXadjustment/9
+        var magicY = AppPrefs.cameraYadjustment/5
+        val offset = Point(AppPrefs.cameraXadjustment-magicX, AppPrefs.cameraYadjustment-magicY)
         val matrix = Matrix()
         if (size.width<size.height){
+            Log.d("processCropping", "rotated:  ${size.width}X${size.height}")
             matrix.postRotate(90f)
+             width = size.height/4
+             height = size.width/4
+        }else{
+            Log.d("processCropping", "rotated:  ${size.width}X${size.height}")
         }
 
 
