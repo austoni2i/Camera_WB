@@ -38,8 +38,8 @@ public class BrightnessFilter extends BaseFilter implements OneParameterFilter {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public void setBrightness(float brightness) {
-        if (brightness < 1.0f) brightness = 1.0f;
-        if (brightness > 2.0f) brightness = 2.0f;
+        //if (brightness < 1.0f) brightness = 1.0f;
+        //if (brightness > 2.0f) brightness = 2.0f;
         this.brightness = brightness;
     }
 

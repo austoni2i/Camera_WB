@@ -9,13 +9,24 @@
     android:background="@color/black"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/ivFilterView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:rotation="180"
+        android:visibility="visible"
+        android:elevation="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.app.camera2apipoc.CenterView
         android:id="@+id/centerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="1dp"
         android:visibility="visible"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,12 +36,12 @@
         android:id="@+id/cameraView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
-        app:cameraEngine="camera1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="invisible"
+        app:cameraEngine="camera2"
+        app:layout_constraintBottom_toBottomOf="@id/ivFilterView"
+        app:layout_constraintEnd_toEndOf="@id/ivFilterView"
+        app:layout_constraintStart_toStartOf="@id/ivFilterView"
+        app:layout_constraintTop_toTopOf="@id/ivFilterView" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -102,12 +113,28 @@
         app:layout_constraintGuide_percent="0.75" />
 
     <Button
+        android:id="@+id/btnManualClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="Close"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btnCapture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnCalibrate" />
+
+    <ImageButton
         android:id="@+id/btnWhitBalanceSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="WB"
+        android:padding="16dp"
+        android:elevation="2dp"
+        app:tint="@color/white"
+        android:background="?selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_baseline_settings_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -134,79 +161,332 @@
 
 
         <Button
-            android:id="@+id/btnAuto"
+            android:id="@+id/btnOriginal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Auto"
+            android:text="Original"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btnCloudy"
+            android:id="@+id/btnParam1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="CLOUDY_DAYLIGHT"
-            app:layout_constraintStart_toEndOf="@+id/btnAuto"
+            android:text="Param1"
+            app:layout_constraintStart_toEndOf="@+id/btnOriginal"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btnDaylight"
+            android:id="@+id/btnParam2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DAYLIGHT"
+            android:text="Param2"
             android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/btnCloudy"
+            app:layout_constraintStart_toEndOf="@+id/btnParam1"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btnFlurocent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FLUORESCENT"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/btnWarmFlurocet"
-            app:layout_constraintTop_toBottomOf="@+id/btnShade" />
 
         <Button
-            android:id="@+id/btnIncandacent"
+            android:id="@+id/btnParam3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="INCANDESCENT"
+            android:text="PARAM3"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnAuto" />
+            app:layout_constraintTop_toBottomOf="@+id/btnOriginal" />
 
         <Button
-            android:id="@+id/btnShade"
+            android:id="@+id/btnParam4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="SHADE"
-            app:layout_constraintStart_toEndOf="@+id/btnIncandacent"
-            app:layout_constraintTop_toBottomOf="@+id/btnAuto" />
+            android:text="Param4"
+            app:layout_constraintStart_toEndOf="@+id/btnParam3"
+            app:layout_constraintTop_toBottomOf="@+id/btnOriginal" />
 
         <Button
-            android:id="@+id/btnTwlight"
+            android:id="@+id/btnManual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TWILIGHT"
+            android:text="Manual"
             android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/btnShade"
-            app:layout_constraintTop_toBottomOf="@+id/btnAuto" />
+            app:layout_constraintStart_toEndOf="@+id/btnParam4"
+            app:layout_constraintTop_toBottomOf="@+id/btnOriginal" />
 
         <Button
             android:id="@+id/btnWarmFlurocet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="WARM_FLUORESCENT"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnIncandacent" />
+            app:layout_constraintTop_toBottomOf="@+id/btnParam3" />
+
+        <Button
+            android:id="@+id/btnFlurocent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flurocent"
+            android:visibility="gone"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/btnWarmFlurocet"
+            app:layout_constraintTop_toBottomOf="@+id/btnParam4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clManualControlContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:visibility="gone">
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarRed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:thumbColor="@android:color/holo_red_dark"
+                app:trackColorActive="@android:color/holo_red_light"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarGreen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarRed"
+                app:thumbColor="#50C878"
+                app:trackColorActive="@android:color/holo_green_light"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarBlue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarGreen"
+                app:thumbColor="@android:color/holo_blue_dark"
+                app:trackColorActive="@android:color/holo_blue_light"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarCyan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarBlue"
+                app:thumbColor="#008B8B"
+                app:trackColorActive="#e0ffff"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarMagenta"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarCyan"
+                app:thumbColor="#FF00FF"
+                app:trackColorActive="#FF77FF"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarYellow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarMagenta"
+                app:thumbColor="#FFFF00"
+                app:trackColorActive="#FFFF99"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarHue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="0.000"
+                android:valueTo="6.200"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarYellow"
+                app:thumbColor="#FFFFFF"
+                app:trackColorActive="#FFFFFF"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarWB"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarHue"
+                app:thumbColor="#FFFFFF"
+                app:trackColorActive="#FFFFFF"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/textViewWB"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="WB"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarWB"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarWB"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarWB" />
+
+            <TextView
+                android:id="@+id/textViewHue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Hue"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarHue"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarHue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarHue" />
+
+            <TextView
+                android:id="@+id/textViewYellow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Y"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarYellow"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarYellow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarYellow" />
+
+            <TextView
+                android:id="@+id/textViewMagenta"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="M"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarMagenta"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarMagenta"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarMagenta" />
+
+            <TextView
+                android:id="@+id/textViewCyan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="C"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarCyan"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarCyan"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarCyan" />
+
+            <TextView
+                android:id="@+id/textViewBlue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="B"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarBlue"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarBlue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarBlue" />
+
+            <TextView
+                android:id="@+id/textViewGreen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="G"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarGreen"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarGreen"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarGreen" />
+
+            <TextView
+                android:id="@+id/textViewRed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="R"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarRed"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarRed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarRed" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
     <com.google.android.material.slider.Slider
         android:id="@+id/seekBarWBRed"
         android:layout_width="0dp"
