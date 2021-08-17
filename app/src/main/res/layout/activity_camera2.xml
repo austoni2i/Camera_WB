@@ -390,6 +390,64 @@
                 app:trackColorActive="#FFFFFF"
                 app:trackColorInactive="@android:color/darker_gray" />
 
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarBrightness"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0"
+                android:value="0.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarWB"
+                app:thumbColor="#FFFFFF"
+                app:trackColorActive="#FFFFFF"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/seekBarContrast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:valueFrom="0.0"
+                android:valueTo="5.0"
+                android:value="1.0"
+                android:layout_marginStart="32dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekBarBrightness"
+                app:thumbColor="#FFFFFF"
+                app:trackColorActive="#FFFFFF"
+                app:trackColorInactive="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/textViewContrast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Con"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarContrast"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarContrast"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarContrast" />
+
+            <TextView
+                android:id="@+id/textViewBrightness"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Brt"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/seekBarBrightness"
+                app:layout_constraintEnd_toStartOf="@+id/seekBarBrightness"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/seekBarBrightness" />
+
             <TextView
                 android:id="@+id/textViewWB"
                 android:layout_width="0dp"

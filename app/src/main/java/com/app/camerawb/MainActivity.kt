@@ -281,6 +281,8 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
         seekBarYellow.value = 0f
         seekBarHue.value = 0f
         seekBarWB.value = 0f
+        seekBarBrightness.value = 0f
+        seekBarContrast.value = 1f
     }
 
     private fun applyManualRule() {
@@ -292,8 +294,10 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
         val yellow = seekBarYellow.value
         val hue = seekBarHue.value
         val wb = seekBarWB.value
+        val brightness = seekBarBrightness.value
+        val contrast = seekBarContrast.value
         ruleString =
-            "@adjust hsv $red $green $blue $magenta $yellow $cyan @adjust hue $hue @adjust whitebalance $wb 1"
+            "@adjust hsv $red $green $blue $magenta $yellow $cyan @adjust hue $hue @adjust whitebalance $wb 1 @adjust brightness $brightness @adjust contrast $contrast "
     }
 
     private fun showManualControlPanel(show:Boolean = true) {
