@@ -13,13 +13,9 @@ import com.app.camerawb.databinding.ActivityCameraPreviewBinding
 import kotlinx.android.synthetic.main.activity_camera_preview.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.zomato.photofilters.imageprocessors.Filter
 import org.wysaid.myUtils.ImageUtil
 
 import org.wysaid.nativePort.CGENativeLibrary
-import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter
-
-import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter
 
 
 class CameraPreviewActivity : AppCompatActivity() {
@@ -27,9 +23,6 @@ class CameraPreviewActivity : AppCompatActivity() {
     lateinit var binding: ActivityCameraPreviewBinding
     var imgUri: Uri?=null
 
-    init {
-        System.loadLibrary("NativeImageProcessor")
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         AppUtils.hideSystemUI(this, true)
         window.setFlags(

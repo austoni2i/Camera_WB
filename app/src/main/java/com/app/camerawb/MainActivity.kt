@@ -31,8 +31,6 @@ import com.app.camera2apipoc.ImageUtils.processCropping
 import com.app.camera2apipoc.ImageUtils.save
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.PictureResult
-import jp.co.cyberagent.android.gpuimage.GPUImage
-import jp.co.cyberagent.android.gpuimage.filter.*
 import org.wysaid.common.Common
 import org.wysaid.nativePort.CGENativeLibrary
 import java.io.ByteArrayOutputStream
@@ -49,7 +47,7 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
     var patientId: String? = null
     var dialog: AlertDialog? = null
     var snackbar: Snackbar? = null
-    lateinit var gpuImage: GPUImage
+    //lateinit var gpuImage: GPUImage
     var ruleString = ""
     var isManualMode = false
 

@@ -54,9 +54,9 @@ dependencies {
     kapt "com.github.permissions-dispatcher:permissionsdispatcher-processor:4.8.0"
 
     implementation 'org.wysaid:gpuimage-plus:2.6.3'
-    implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
-    implementation 'com.github.zomato:androidphotofilters:1.0.2'
-    implementation 'com.quickbirdstudios:opencv:3.4.1'
+    //implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
+    //implementation 'com.github.zomato:androidphotofilters:1.0.2'
+    //implementation 'com.quickbirdstudios:opencv:3.4.1'
     // Kotlin coroutine dependencies
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
