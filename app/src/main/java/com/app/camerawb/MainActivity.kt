@@ -1,15 +1,13 @@
 package com.app.camerawb
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,6 +25,12 @@ import permissions.dispatcher.RuntimePermissions
 import java.io.File
 import android.graphics.*
 import android.media.Image
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import com.app.camera2apipoc.ImageUtils.processCropping
 import com.app.camera2apipoc.ImageUtils.save
 import com.otaliastudios.cameraview.CameraListener
@@ -47,19 +51,22 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
     var patientId: String? = null
     var dialog: AlertDialog? = null
     var snackbar: Snackbar? = null
+
     //lateinit var gpuImage: GPUImage
     var ruleString = ""
     var isManualMode = false
+    val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCamera2Binding.inflate(layoutInflater)
-        val view = binding.root
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_camera2)
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
+        binding.activity = this
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        setContentView(view)
         patientId = "123456"
         patientId ?: onBackPressed()
 
@@ -85,17 +92,21 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
             override fun onPictureTaken(result: PictureResult) {
                 super.onPictureTaken(result)
 
-                result.toBitmap { bmp->
+                result.toBitmap { bmp ->
                     val filterbmp = addFliter(bmp)
                     val bmpArray = bitmapToByteArray(filterbmp)
 
                     processCropping(bmpArray, result.size)?.let {
                         save(this@MainActivity, it) { uriString ->
                             uriString ?: return@save
-                            val intent = Intent(this@MainActivity, CameraPreviewActivity::class.java)
+                            val intent =
+                                Intent(this@MainActivity, CameraPreviewActivity::class.java)
                             intent.putExtra("IMG_URI", uriString)
                             startActivity(intent)
-                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                            overridePendingTransition(
+                                android.R.anim.fade_in,
+                                android.R.anim.fade_out
+                            )
 
                         }
 
@@ -211,12 +222,11 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
 
         btnManualClose?.setOnClickListener {
             showManualControlPanel(false)
+            hideKeyboard()
+
         }
 
         resetManualWhiteBalance()
-
-
-
 
         switchAf?.setOnCheckedChangeListener { compoundButton, b ->
 
@@ -248,7 +258,7 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
                 runOnUiThread { ivFilterView.setImageBitmap(bitmap) }
                 */
                 if (isManualMode)
-                applyManualRule()
+                    applyManualRule()
                 //OpenGl
                 val out = ByteArrayOutputStream()
                 val yuvImage = YuvImage(data, ImageFormat.NV21, it.size.width, it.size.height, null)
@@ -267,20 +277,221 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
             }
         }
 
+        binding.seekBarRed.addOnChangeListener { slider, value, fromUser ->
+            viewModel.red.value = value
+        }
+        binding.seekBarGreen.addOnChangeListener { slider, value, fromUser ->
+            viewModel.green.value = value
+        }
+        binding.seekBarBlue.addOnChangeListener { slider, value, fromUser ->
+            viewModel.blue.value = value
+        }
+        binding.seekBarCyan.addOnChangeListener { slider, value, fromUser ->
+            viewModel.cyan.value = value
+        }
+        binding.seekBarMagenta.addOnChangeListener { slider, value, fromUser ->
+            viewModel.magenta.value = value
+        }
+        binding.seekBarYellow.addOnChangeListener { slider, value, fromUser ->
+            viewModel.yellow.value = value
+        }
+        binding.seekBarHue.addOnChangeListener { slider, value, fromUser ->
+            viewModel.hue.value = value
+        }
+        binding.seekBarBrightness.addOnChangeListener { slider, value, fromUser ->
+            viewModel.brt.value = value
+        }
+        binding.seekBarContrast.addOnChangeListener { slider, value, fromUser ->
+            viewModel.contrast.value = value
+        }
+
 
     }
 
+    private fun hideKeyboard() {
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
+
+    fun onApplied(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+
+
+        val value = view?.text.toString().toFloat()
+        when (view) {
+            binding.etRed -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.red)
+            }
+            binding.etGreen -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.green)
+            }
+            binding.etBlue -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.blue)
+            }
+            binding.etCyan -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.cyan)
+            }
+            binding.etMagenta -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.magenta)
+            }
+            binding.etYellow -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.yellow)
+            }
+            binding.etHue -> {
+                return applyEtValues(view, value, hueMin, hueMax, viewModel.hue)
+            }
+            binding.etWB -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.wb)
+            }
+            binding.etBrt -> {
+                return applyEtValues(view, value, satMin, satMax, viewModel.brt)
+            }
+            binding.etCon -> {
+                return applyEtValues(view, value, contrastMin, contrastMax, viewModel.contrast)
+            }
+        }
+        return false
+    }
+
+    fun applyEtValues(
+        view: TextView,
+        value: Float,
+        min: Float,
+        max: Float,
+        param: MutableLiveData<Float>
+    ): Boolean {
+        if (value in min..max) {
+            param.value = view.text.toString().toFloat()
+            return false
+        } else {
+            view.error = "Value should be with $min to $max"
+            return true
+        }
+    }
+
+    fun fabAdjustValue(view: View){
+        val speed2x = 0.1f
+        val speed1x = 0.01f
+        when(view){
+            binding.fabRAdd -> {
+                val result = viewModel.red.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                viewModel.red.value = result
+            }
+            binding.fabRMinus -> {
+                val result = viewModel.red.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                viewModel.red.value = result
+            }
+            binding.fabGAdd -> {
+                val result = viewModel.green.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                viewModel.green.value = result
+            }
+            binding.fabGMinus -> {
+                val result = viewModel.green.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.green.value = result
+            }
+            binding.fabBAdd -> {
+                val result = viewModel.blue.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.blue.value = result
+            }
+            binding.fabBMinus -> {
+                val result = viewModel.blue.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.blue.value = result
+            }
+            binding.fabCAdd -> {
+                val result = viewModel.cyan.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.cyan.value = result
+            }
+            binding.fabCMinus -> {
+                val result = viewModel.cyan.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.cyan.value = result
+            }
+            binding.fabMagAdd -> {
+                val result = viewModel.magenta.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.magenta.value = result
+            }
+            binding.fabMagMinus -> {
+                val result = viewModel.magenta.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.magenta.value = result
+            }
+            binding.fabYellowAdd -> {
+                val result = viewModel.yellow.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.yellow.value = result
+            }
+            binding.fabYellowMinus -> {
+                val result = viewModel.yellow.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.yellow.value = result
+            }
+            binding.fabHueAdd -> {
+                val result = viewModel.hue.value?.plus(speed2x)?:return
+                if (result in hueMin..hueMax)
+                    viewModel.hue.value = result
+            }
+            binding.fabHueMinus -> {
+                val result = viewModel.hue.value?.minus(speed2x)?:return
+                if (result in hueMin..hueMax)
+                    viewModel.hue.value = result
+            }
+            binding.fabWBAdd -> {
+                val result = viewModel.wb.value?.plus(speed1x)?:return
+                if (result in satMin..satMax)
+                    viewModel.wb.value = result
+            }
+            binding.fabWBMinus -> {
+                val result = viewModel.wb.value?.minus(speed1x)?:return
+                if (result in satMin..satMax)
+                    viewModel.wb.value = result
+            }
+            binding.fabBrtAdd -> {
+                val result = viewModel.brt.value?.plus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.brt.value = result
+            }
+            binding.fabBrtMinus -> {
+                val result = viewModel.brt.value?.minus(speed2x)?:return
+                if (result in satMin..satMax)
+                    viewModel.brt.value = result
+            }
+            binding.fabConAdd -> {
+                val result = viewModel.contrast.value?.plus(speed2x)?:return
+                if (result in contrastMin..contrastMax)
+                    viewModel.contrast.value = result
+            }
+            binding.fabConMinus -> {
+                val result = viewModel.contrast.value?.minus(speed2x)?:return
+                if (result in contrastMin..contrastMax)
+                    viewModel.contrast.value = result
+            }
+
+        }
+    }
+
+    fun getTwoDecimalFloat(float: Float): String {
+        return String.format("%.2f", float)
+    }
+
+
     private fun resetManualFilters() {
-        seekBarRed.value = 0f
-        seekBarGreen.value = 0f
-        seekBarBlue.value = 0f
-        seekBarCyan.value = 0f
-        seekBarMagenta.value = 0f
-        seekBarYellow.value = 0f
-        seekBarHue.value = 0f
-        seekBarWB.value = 0f
-        seekBarBrightness.value = 0f
-        seekBarContrast.value = 1f
+        seekBarRed.value = redDefault
+        seekBarGreen.value = greenDefault
+        seekBarBlue.value = blueDefault
+        seekBarCyan.value = cyanDefault
+        seekBarMagenta.value = magentaDefault
+        seekBarYellow.value = yellowDefault
+        seekBarHue.value = hueDefault
+        seekBarWB.value = wbDefault
+        seekBarBrightness.value = brtDefault
+        seekBarContrast.value = conDefault
     }
 
     private fun applyManualRule() {
@@ -298,7 +509,7 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
             "@adjust hsv $red $green $blue $magenta $yellow $cyan @adjust hue $hue @adjust whitebalance $wb 1 @adjust brightness $brightness @adjust contrast $contrast "
     }
 
-    private fun showManualControlPanel(show:Boolean = true) {
+    private fun showManualControlPanel(show: Boolean = true) {
         val visibility = if (show) View.VISIBLE else View.GONE
         clManualControlContainer.visibility = visibility
         btnManualClose.visibility = visibility
@@ -313,18 +524,18 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
         return byteArray
     }
 
-    private fun setupGPUImage(){
-      /*  gpuImage = GPUImage(this)
-        val istr = assets.open("lookupbluesat.png")
-        val lutbitmap = BitmapFactory.decodeStream(istr)
-        istr.close()
-        val filter = GPUImageLookupFilter()
-        filter.bitmap = lutbitmap
-        gpuImage.setFilter(filter)*/
+    private fun setupGPUImage() {
+        /*  gpuImage = GPUImage(this)
+          val istr = assets.open("lookupbluesat.png")
+          val lutbitmap = BitmapFactory.decodeStream(istr)
+          istr.close()
+          val filter = GPUImageLookupFilter()
+          filter.bitmap = lutbitmap
+          gpuImage.setFilter(filter)*/
     }
 
-    private fun setupGPUImagePlus(){
-        CGENativeLibrary.setLoadImageCallback(object : CGENativeLibrary.LoadImageCallback{
+    private fun setupGPUImagePlus() {
+        CGENativeLibrary.setLoadImageCallback(object : CGENativeLibrary.LoadImageCallback {
             override fun loadImage(name: String?, arg: Any?): Bitmap? {
                 val am = assets
                 val istr = try {
@@ -344,7 +555,7 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
     }
 
     private fun addFliter(image: Bitmap?): Bitmap? {
-        image?:return null
+        image ?: return null
 
 
         /*gpuImage.setImage(image)
@@ -535,6 +746,43 @@ class MainActivity : AppCompatActivity(), CenterView.OnSwipeListener {
             super.onBackPressed()
         }
 
+    }
+
+    fun isKeyboardVisible(callback: (visible: Boolean)->Unit){
+
+        binding.clRoot.viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
+                val r = Rect()
+                //r will be populated with the coordinates of your view that area still visible.
+                binding.clRoot.getWindowVisibleDisplayFrame(r);
+
+                val heightDiff = binding.clRoot.rootView.height - r.height();
+                if (heightDiff > 0.25*binding.clRoot.rootView.height) { // if more than 25% of the screen, its probably a keyboard...
+                    callback.invoke(true)
+                }else
+                    callback.invoke(false)
+            }
+        });
+    }
+
+    companion object{
+        const val satMax = 1f
+        const val satMin = -1f
+        const val hueMin = 0f
+        const val hueMax = 6.2f
+        const val contrastMin = 0f
+        const val contrastMax = 5f
+
+        const val redDefault = 0.0f
+        const val greenDefault = 0.0f
+        const val blueDefault = 0.0f
+        const val cyanDefault = 0.0f
+        const val magentaDefault = 0.0f
+        const val yellowDefault = 0.0f
+        const val hueDefault = 0.0f
+        const val wbDefault = 0.0f
+        const val brtDefault = 0.0f
+        const val conDefault = 1.0f
     }
 
 

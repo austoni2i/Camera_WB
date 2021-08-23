@@ -5,8 +5,9 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.19947916666666668" />
         <entry key="app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1875" />
-        <entry key="app/src/main/res/layout/activity_camera2.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_camera2.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_camera_preview.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_main_view_model.xml" value="0.17135416666666667" />
       </map>
     </option>
   </component>
