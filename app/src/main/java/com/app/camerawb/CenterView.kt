@@ -1,10 +1,9 @@
-package com.app.camera2apipoc
+package com.app.camerawb
 
 import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.RequiresApi

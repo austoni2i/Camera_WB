@@ -1,4 +1,4 @@
-package com.app.camera2apipoc
+package com.app.camerawb
 
 import RefreshGallery
 import android.content.Context
@@ -7,7 +7,6 @@ import android.graphics.*
 import android.media.Image
 import android.os.Environment
 import android.util.Log
-import com.app.camerawb.AppPrefs
 import com.otaliastudios.cameraview.size.Size
 import java.io.*
 import java.nio.ByteBuffer
@@ -34,9 +33,10 @@ object ImageUtils {
     fun convertToJPEG(image: Image): ByteArray? {
         val jpeg: ByteArray
         if (image.getFormat() == ImageFormat.JPEG) {
-            jpeg = readJPEG(image)?:return null
+            jpeg = readJPEG(image) ?:return null
         } else if (image.getFormat() == ImageFormat.YUV_420_888) {
-            jpeg = NV21toJPEG(YUV420toNV21(image)?:return null, image.getWidth(), image.getHeight(), 100)?:return null
+            jpeg = NV21toJPEG(YUV420toNV21(image) ?:return null, image.getWidth(), image.getHeight(), 100)
+                ?:return null
         } else {
             throw RuntimeException("Unsupported format: " + image.getFormat())
         }
@@ -232,7 +232,7 @@ object ImageUtils {
     fun save(context: Context, bytes: ByteArray, onSuccess: ((fileUri:String?)->Unit)?=null) {
         var output: OutputStream? = null
         try {
-            getFileToSave(context)?.let {rawFile->
+            getFileToSave(context)?.let { rawFile->
                 output = FileOutputStream(rawFile)
                 output?.write(bytes)
                 onSuccess?.invoke(rawFile.absoluteFile.absolutePath.toString())
